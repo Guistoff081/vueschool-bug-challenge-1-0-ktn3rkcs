@@ -7,6 +7,10 @@
       </div>
       <div class="message-content">
         <p class="alien-text">{{ message }}</p>
+        <BaseButton @click="copyToClipboard">{{
+          isCopyButtonClicked ? "Copied!" : "Copy"
+        }}</BaseButton>
+        <!-- Added copy button -->
       </div>
       <p>
         Copy the above alien message to the decoder input to decode the message.
@@ -16,10 +20,25 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { ALIEN_MESSAGE } from '../../constants/messages';
+import { ref } from "vue";
+import { ALIEN_MESSAGE } from "../../constants/messages";
+import BaseButton from "../ui/BaseButton.vue"; // Import BaseButton
 
 const message = ALIEN_MESSAGE;
+
+const isCopyButtonClicked = ref(false);
+
+function copyToClipboard() {
+  navigator.clipboard
+    .writeText(message)
+    .then(() => {
+      console.log("Message copied to clipboard");
+      isCopyButtonClicked.value = true;
+    })
+    .catch((err) => {
+      console.error("Failed to copy: ", err);
+    });
+}
 </script>
 
 <style scoped>
